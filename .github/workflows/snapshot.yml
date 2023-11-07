@@ -1,0 +1,52 @@
+name: Release (snapshot)
+on: [ push ]
+jobs:
+  quality-assurance:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      packages: read
+    name: Quality Assurance
+    uses: ./.github/workflows/qa.yml
+  versioning:
+    name: Versioning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - id: version
+        env:
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          echo "version=${GIT_SHA:0:16}-SNAPSHOT" >> $GITHUB_OUTPUT
+  release:
+    name: Release (Snapshot)
+    runs-on: ubuntu-latest
+    needs: [ quality-assurance, versioning ]
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      # region todo(James Bradlee): Find an effective way to do this in a different job and
+      #                             download the cache and artifacts for immediate release when
+      #                             quality assurance is complete.
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Build
+        env:
+          VERSION: ${{ needs.versioning.outputs.version }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./gradlew build
+      - name: Release (packages)
+        env:
+          VERSION: ${{ needs.versioning.outputs.version }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./gradlew publish
+      # endregion
