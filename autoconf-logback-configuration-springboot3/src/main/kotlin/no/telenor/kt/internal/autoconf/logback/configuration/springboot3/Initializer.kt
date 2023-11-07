@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 
-@Suppress("unused")
 class Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
 	companion object {
 		init {
