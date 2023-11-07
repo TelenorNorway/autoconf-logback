@@ -16,7 +16,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.exists
 
-private val isDev = System.getProperty("java.class.path", "").contains(".gradle/caches")
+// private val isDev = System.getProperty("java.class.path", "").contains(".gradle/caches")
 
 class Configure {
 	companion object {
