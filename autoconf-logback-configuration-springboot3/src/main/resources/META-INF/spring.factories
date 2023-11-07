@@ -1,0 +1,1 @@
+org.springframework.context.ApplicationContextInitializer=no.telenor.kt.internal.autoconf.logback.configuration.springboot3.Initializer
