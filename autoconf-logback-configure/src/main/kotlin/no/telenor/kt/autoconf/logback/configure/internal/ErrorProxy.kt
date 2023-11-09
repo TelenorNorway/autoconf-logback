@@ -108,7 +108,7 @@ internal fun transformErrorProxy(
 	)
 	seen[throwable] = proxy
 	if (throwable.cause != null) {
-		proxy._cause = seen[throwable.cause] ?: transformErrorProxy(throwable, configuration, seen)
+		proxy._cause = seen[throwable.cause] ?: transformErrorProxy(throwable.cause, configuration, seen)
 	}
 	return proxy
 }
