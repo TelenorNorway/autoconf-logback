@@ -14,7 +14,7 @@ class JsonTheme : Theme {
 	var MESSAGE_KEY = jsonString("message")
 	var ERROR_KEY = jsonString("error")
 	val MDC_KEY_OPEN = "\""
-	var MDC_KEY_PREFIX = "mdc."
+	var MDC_KEY_PREFIX = "ctx."
 	var MDC_KEY_SUFFIX = ""
 	val MDC_KEY_CLOSE = "\""
 
