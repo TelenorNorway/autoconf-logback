@@ -48,7 +48,7 @@ class ErrorProxy(
 			var omitted = 0
 			var hidden = 0
 
-			for (index in 0..stack.size - commonFrames) {
+			for (index in 0..<stack.size - commonFrames) {
 				val el = stack[index]
 
 				if (el.omitted) {

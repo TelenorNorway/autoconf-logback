@@ -16,7 +16,7 @@ class StackTraceElementProxy(
 	override val alreadyShown: Boolean,
 ) : StackTraceElement {
 	override val repr: String =
-		"$clazz.$method${file?.let { "($it${line?.let { line -> ":$line" }})" }}${module?.let { " ~[$it${version?.let { version -> ":$version" }}]" }}"
+		"$clazz.$method${file?.let { "($it${line?.let { line -> ":$line" }})" }}${module?.let { " ~[$it${version?.let { version -> ":$version" }}]" } ?: ""}"
 
 	override val omitted: Boolean = configuration.isStackTraceIgnored(this)
 

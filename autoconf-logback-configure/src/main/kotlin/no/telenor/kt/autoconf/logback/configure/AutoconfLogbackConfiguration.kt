@@ -99,8 +99,12 @@ data class AutoconfLogbackConfiguration @EnvConstructor("LB_") constructor(
 		separator = "[\\s\\r\\n\\t]+",
 		separatorRegex = true
 	) Map<String, Level> = emptyMap(),
+
+	/** Print exceptions thrown from themes. */
+	@Env val layoutDebug: Boolean = false,
 ) {
 
-	fun isStackTraceIgnored(element: StackTraceElement): Boolean = stacktraceExclude.any { it.matches(element.repr) }
+	fun isStackTraceIgnored(element: StackTraceElement): Boolean =
+		stacktraceExclude.any { it.containsMatchIn(element.repr) }
 
 }
