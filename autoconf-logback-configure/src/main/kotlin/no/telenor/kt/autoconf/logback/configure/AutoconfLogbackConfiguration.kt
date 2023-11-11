@@ -102,9 +102,17 @@ data class AutoconfLogbackConfiguration @EnvConstructor("LB_") constructor(
 
 	/** Print exceptions thrown from themes. */
 	@Env val layoutDebug: Boolean = false,
+
+	/** Debug the loading and processing of themes. */
+	@Env val debug: Boolean = false,
 ) {
 
 	fun isStackTraceIgnored(element: StackTraceElement): Boolean =
 		stacktraceExclude.any { it.containsMatchIn(element.repr) }
+
+	fun debug(message: String) {
+		if (!this.debug) return
+		println("LBDEBUG = $message")
+	}
 
 }

@@ -27,7 +27,10 @@ class Configure {
 				panic("Could not load logback-autoconf configuration", ex)
 			}
 
+			configuration.debug("Configuration = $configuration")
+
 			val theme: Theme = getTheme(
+				configuration,
 				whichTheme(configuration.theme, configuration.themePath),
 				configuration.fallbackToJsonOnError
 			)
@@ -79,25 +82,35 @@ private fun whichTheme(themeName: String?, directories: List<String>): Path? {
 	return null
 }
 
-private fun getTheme(path: Path?, fallbackToJsonOnError: Boolean): Theme {
-	path ?: return JsonTheme()
+private fun getTheme(configuration: AutoconfLogbackConfiguration, path: Path?, fallbackToJsonOnError: Boolean): Theme {
+	if (path == null) {
+		configuration.debug("getTheme(): no path to theme, falling back to JsonTheme")
+		return JsonTheme()
+	}
 	try {
 		val classLoader = URLClassLoader(arrayOf(path.toUri().toURL()))
+		configuration.debug("Created class loader for $path")
 		Construct.scan(classLoader)
+		configuration.debug("Scanned class loader for env-parsers, now getting theme resources")
 		for (resource in classLoader.getResources("META-INF/services/no.telenor.kt.autoconf.logback.theme.Theme")) {
 			val className = resource.readText().split(newLineRegex).getOrNull(0) ?: continue
+			configuration.debug("Loading $className")
 			val clazz = classLoader.loadClass(className)
+			configuration.debug("Loaded, constructing")
 			val constructor = clazz.constructors
 				.ifEmpty { arrayOf(clazz.getDeclaredConstructor()) }
 				.firstOrNull { it.parameters.isEmpty() && Modifier.isPublic(it.modifiers) }
 				?: throw Exception("${clazz.name} is needs a constructor that accepts zero parameters")
 			val instance = constructor.newInstance()
+			configuration.debug("Created instance")
 			if (instance !is Theme) throw Exception("Provided theme-class is not a Theme")
 			return instance
 		}
+		configuration.debug("No theme found, falling back to json")
 		return JsonTheme()
 	} catch (ex: Throwable) {
 		if (!fallbackToJsonOnError) throw ex
+		configuration.debug("Error occured, falling back to json: $ex")
 		return JsonTheme()
 	}
 }
