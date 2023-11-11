@@ -35,6 +35,8 @@ class Configure {
 				configuration.fallbackToJsonOnError
 			)
 
+			configuration.debug("Activating theme ${theme.javaClass.name}")
+
 			val appender = ConsoleAppender<ILoggingEvent>()
 			appender.context = loggerContext
 			appender.name = "console"
@@ -65,6 +67,8 @@ class Configure {
 
 			loggerContext.maxCallerDataDepth = 2
 			loggerContext.isPackagingDataEnabled = true
+
+			configuration.debug("Configuration over")
 
 			return configuration
 		}
@@ -104,6 +108,7 @@ private fun getTheme(configuration: AutoconfLogbackConfiguration, path: Path?, f
 			val instance = constructor.newInstance()
 			configuration.debug("Created instance")
 			if (instance !is Theme) throw Exception("Provided theme-class is not a Theme")
+			configuration.debug("Returning theme ${clazz.name}")
 			return instance
 		}
 		configuration.debug("No theme found, falling back to json")
