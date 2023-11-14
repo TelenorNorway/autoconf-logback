@@ -6,6 +6,7 @@ import no.telenor.kt.env.EnvConstructor
 import no.telenor.kt.env.ListEnv
 import no.telenor.kt.env.MapEnv
 import org.slf4j.event.Level
+import kotlin.io.path.Path
 
 data class AutoconfLogbackConfiguration @EnvConstructor("LB_") constructor(
 	/**
@@ -20,7 +21,8 @@ data class AutoconfLogbackConfiguration @EnvConstructor("LB_") constructor(
 	 */
 	@Env val theme: String? = null,
 
-	internal val defaultThemePath: String = "~/.config/autoconfigure/logback/themes",
+	internal val defaultThemePath: String? = (System.getenv("HOME") ?: System.getenv("USER_HOME"))
+		?.let { Path(it).resolve(".config/autoconfigure/logback/themes") }?.toString(),
 
 	/**
 	 * A list (separated by `:`) of possible directories where
@@ -33,7 +35,7 @@ data class AutoconfLogbackConfiguration @EnvConstructor("LB_") constructor(
 	@Env val themePath: @ListEnv(
 		separator = "[:]+",
 		regex = true
-	) List<String> = listOf(defaultThemePath),
+	) List<String> = defaultThemePath?.let { listOf(it) } ?: listOf(),
 
 	/**
 	 * Ignore any errors thrown by the loaded the [theme] and fallback
