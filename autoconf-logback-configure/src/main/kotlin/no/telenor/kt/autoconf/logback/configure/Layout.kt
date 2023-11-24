@@ -9,10 +9,12 @@ class Layout(
 	private val theme: Theme,
 	private val configuration: AutoconfLogbackConfiguration
 ) : LayoutBase<ILoggingEvent>() {
-	override fun doLayout(event: ILoggingEvent) = try {
-		theme.doLayout(transformLoggingEventToPayload(event, configuration))
-	} catch (ex: Throwable) {
-		if (configuration.layoutDebug) ex.printStackTrace()
-		throw ex
+	override fun doLayout(event: ILoggingEvent) = synchronized(this) {
+		try {
+			theme.doLayout(transformLoggingEventToPayload(event, configuration))
+		} catch (ex: Throwable) {
+			if (configuration.layoutDebug) ex.printStackTrace()
+			throw ex
+		}
 	}
 }
