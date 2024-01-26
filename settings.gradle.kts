@@ -14,5 +14,6 @@ rootProject.name = "autoconf-logback"
 include(
 	"autoconf-logback-configure",
 	"autoconf-logback-theme",
-	"autoconf-logback-configuration-springboot3"
+	"autoconf-logback-configuration-standalone",
+	"autoconf-logback-configuration-springboot3",
 )

@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/autoconf-logback-configuration-springboot3" />
+            <option value="$PROJECT_DIR$/autoconf-logback-configuration-standalone" />
             <option value="$PROJECT_DIR$/autoconf-logback-configure" />
             <option value="$PROJECT_DIR$/autoconf-logback-theme" />
           </set>
