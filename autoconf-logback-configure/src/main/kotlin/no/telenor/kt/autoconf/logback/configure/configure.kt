@@ -54,13 +54,7 @@ class Configure {
 			appender.start()
 
 			val mainLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME)
-			mainLogger.level = when (configuration.logLevel) {
-				Level.ERROR -> ch.qos.logback.classic.Level.ERROR
-				Level.WARN -> ch.qos.logback.classic.Level.WARN
-				Level.INFO -> ch.qos.logback.classic.Level.INFO
-				Level.DEBUG -> ch.qos.logback.classic.Level.DEBUG
-				Level.TRACE -> ch.qos.logback.classic.Level.TRACE
-			}
+			mainLogger.level = actualLevel(configuration.logLevel)
 			mainLogger.detachAndStopAllAppenders()
 			mainLogger.isAdditive = false
 			mainLogger.addAppender(appender)
@@ -68,11 +62,23 @@ class Configure {
 			loggerContext.maxCallerDataDepth = 2
 			loggerContext.isPackagingDataEnabled = true
 
+			configuration.logLevels.forEach {
+				mainLogger.loggerContext.getLogger(it.key).level = actualLevel(it.value)
+			}
+
 			configuration.debug("Configuration over")
 
 			return configuration
 		}
 	}
+}
+
+private fun actualLevel(level: Level) = when (level) {
+	Level.ERROR -> ch.qos.logback.classic.Level.ERROR
+	Level.WARN -> ch.qos.logback.classic.Level.WARN
+	Level.INFO -> ch.qos.logback.classic.Level.INFO
+	Level.DEBUG -> ch.qos.logback.classic.Level.DEBUG
+	Level.TRACE -> ch.qos.logback.classic.Level.TRACE
 }
 
 private fun whichTheme(themeName: String?, directories: List<String>): Path? {
