@@ -63,7 +63,7 @@ class Configure {
 			loggerContext.isPackagingDataEnabled = true
 
 			configuration.logLevels.forEach {
-				mainLogger.loggerContext.getLogger(it.key).level = actualLevel(it.value)
+				loggerContext.getLogger(it.key).level = actualLevel(it.value)
 			}
 
 			configuration.debug("Configuration over")
