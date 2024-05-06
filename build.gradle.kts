@@ -1,19 +1,18 @@
 plugins {
 	kotlin("jvm") version "1.9.20"
-	id("no.ghpkg") version "0.3.3"
+	id("sh.tnn") version "0.3.0"
 	`maven-publish`
 }
 
 allprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
-	apply(plugin = "no.ghpkg")
+	apply(plugin = "sh.tnn")
 
 	group = "no.telenor.kt"
-	version = versioning.environment()
 
 	repositories {
 		mavenCentral()
-		git.hub("telenornorway")
+		telenor.public()
 	}
 
 	dependencies {
